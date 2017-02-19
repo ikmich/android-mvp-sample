@@ -2,30 +2,26 @@ package org.ikmich.sqlitefoo.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.ikmich.sqlitefoo.R;
 import org.ikmich.sqlitefoo.data.Comment;
-import org.ikmich.sqlitefoo.data.CommentsDataSource;
 
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
-
-    private CommentsDataSource datasource;
+public class CommentsActivity extends BaseActivity implements CommentsContract.View {
 
     @BindView(android.R.id.list)
     ListView list;
+
+    private CommentsContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +31,7 @@ public class MainActivity extends AppCompatActivity {
         // ButterKnife init
         ButterKnife.bind(this);
 
-        datasource = new CommentsDataSource(this);
-        datasource.open();
-
-        populateList();
+        presenter = new CommentsPresenterImpl(this);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -50,21 +43,19 @@ public class MainActivity extends AppCompatActivity {
                 f.show(fm, comment, new EditCommentFragment.InteractionListener() {
                     @Override
                     public void onUpdate(String newComment) {
-                        datasource.updateComment(comment.getId(), newComment);
-                        populateList();
+                        presenter.handleUpdateAction(comment.getId(), newComment);
                     }
                 });
             }
         });
     }
 
-    void populateList() {
-        List<Comment> values = datasource.getAllComments();
-
+    @Override
+    public void populateList(List<Comment> comments) {
         // use the SimpleCursorAdapter to show the
         // elements in a ListView
         ArrayAdapter<Comment> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, values);
+                android.R.layout.simple_list_item_1, comments);
         setListAdapter(adapter);
     }
 
@@ -76,46 +67,50 @@ public class MainActivity extends AppCompatActivity {
         return list.getAdapter();
     }
 
-    public void onClick(View view) {
+    @Override
+    public void addComment(Comment comment) {
         @SuppressWarnings("unchecked")
         ArrayAdapter<Comment> adapter = (ArrayAdapter<Comment>) getListAdapter();
+        adapter.add(comment);
+        adapter.notifyDataSetChanged();
+    }
 
+    @Override
+    public void removeComment(Comment comment) {
+        @SuppressWarnings("unchecked")
+        ArrayAdapter<Comment> adapter = (ArrayAdapter<Comment>) getListAdapter();
+        adapter.remove(comment);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void onClick(View view) {
+        @SuppressWarnings("unchecked")
         Comment comment;
 
         switch (view.getId()) {
             case R.id.add:
-                String[] comments = new String[]{"Cool", "Very nice", "Hate it"};
-                int nextInt = new Random().nextInt(3);
-                // save the new comment to the database
-                comment = datasource.createComment(comments[nextInt]);
-                adapter.add(comment);
+                presenter.handleAddAction();
                 break;
 
             case R.id.delete:
                 // Check that there are items first.
                 if (getListAdapter().getCount() > 0) {
                     comment = (Comment) getListAdapter().getItem(0);
-                    datasource.deleteComment(comment);
-                    adapter.remove(comment);
+                    presenter.handleDeleteAction(comment);
                 }
                 break;
         }
-        adapter.notifyDataSetChanged();
     }
 
     @Override
     protected void onResume() {
-        datasource.open();
+        presenter.onResume();
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        datasource.close();
+        presenter.onPause();
         super.onPause();
-    }
-
-    void toast(Object o) {
-        Toast.makeText(this, o.toString(), Toast.LENGTH_SHORT).show();
     }
 }

@@ -85,6 +85,11 @@ public class CommentsDataSource implements CommentsTable {
                 SQLiteDatabase.CONFLICT_IGNORE);
     }
 
+    public boolean hasComments() {
+        List<Comment> comments = getAllComments();
+        return !comments.isEmpty();
+    }
+
     public List<Comment> getAllComments() {
         List<Comment> comments = new ArrayList<>();
 
