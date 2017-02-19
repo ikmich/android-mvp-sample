@@ -1,0 +1,2 @@
+# sqlitefoo
+SQLite sample app
