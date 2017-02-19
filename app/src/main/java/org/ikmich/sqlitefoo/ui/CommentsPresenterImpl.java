@@ -10,32 +10,32 @@ import java.util.List;
 public class CommentsPresenterImpl implements CommentsContract.Presenter {
 
     private CommentsContract.View commentsView;
-    private CommentsInteractor interactor;
+    private CommentsContract.Model commentsModel;
 
     public CommentsPresenterImpl(CommentsContract.View commentsView) {
         this.commentsView = commentsView;
-        interactor = new CommentsInteractor(this);
+        commentsModel = new CommentsModelImpl(this);
 
-        List<Comment> comments = interactor.getAllComments();
+        List<Comment> comments = commentsModel.getAllComments();
         if (comments != null && !comments.isEmpty()) {
-            commentsView.populateList(interactor.getAllComments());
+            commentsView.populateList(commentsModel.getAllComments());
         }
     }
 
     @Override
     public void handleUpdateAction(long id, String newComment) {
-        interactor.updateComment(id, newComment);
-        commentsView.populateList(interactor.getAllComments());
+        commentsModel.updateComment(id, newComment);
+        commentsView.populateList(commentsModel.getAllComments());
     }
 
     @Override
     public void handleAddAction() {
-        interactor.addComment();
+        commentsModel.addComment();
     }
 
     @Override
     public void handleDeleteAction(Comment comment) {
-        interactor.deleteComment(comment);
+        commentsModel.deleteComment(comment);
     }
 
     @Override
@@ -50,11 +50,11 @@ public class CommentsPresenterImpl implements CommentsContract.Presenter {
 
     @Override
     public void onResume() {
-        interactor.openDatasource();
+        commentsModel.openDatasource();
     }
 
     @Override
     public void onPause() {
-        interactor.closeDatasource();
+        commentsModel.closeDatasource();
     }
 }

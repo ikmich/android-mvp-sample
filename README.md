@@ -1,2 +1,2 @@
 # sqlitefoo
-SQLite sample app
+SQLite sample app, based on http://www.vogella.com/tutorials/AndroidSQLite/article.html

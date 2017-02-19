@@ -10,14 +10,14 @@ import java.util.Random;
 /**
  *
  */
-public class CommentsInteractor implements CommentsContract.Model {
+public class CommentsModelImpl implements CommentsContract.Model {
 
     private CommentsContract.Presenter presenter;
     private CommentsDataSource datasource;
 
     // TODO How to get activity context in MVP
 
-    public CommentsInteractor(CommentsContract.Presenter presenter) {
+    public CommentsModelImpl(CommentsContract.Presenter presenter) {
         this.presenter = presenter;
 
         datasource = new CommentsDataSource(App.getContext());

@@ -10,10 +10,6 @@ import java.util.List;
 public class CommentsContract {
 
     public interface View {
-        int ACTION_ADD = 1;
-        int ACTION_DELETE_FIRST = 2;
-        int ACTION_UPDATE = 3;
-
         void populateList(List<Comment> comments);
 
         void addComment(Comment comment);
@@ -23,6 +19,7 @@ public class CommentsContract {
 
     interface Presenter extends Model.InteractionListener {
         void onResume();
+
         void onPause();
 
         void handleUpdateAction(long id, String comment);
@@ -34,7 +31,9 @@ public class CommentsContract {
 
     interface Model {
         void openDatasource();
+
         void closeDatasource();
+
         void addComment();
 
         void updateComment(long id, String comment);

@@ -8,7 +8,6 @@ import android.util.Log;
 /**
  *
  */
-
 public class AppSqliteHelper extends SQLiteOpenHelper implements CommentsTable {
 
     private static final String TAG = ">>> " + AppSqliteHelper.class.getName();
