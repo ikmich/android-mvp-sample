@@ -46,6 +46,8 @@ public class CommentsContract {
             void onCommentDeleted(Comment comment);
 
             void onCommentAdded(Comment comment);
+
+            void onCommentUpdated();
         }
     }
 }

@@ -2,8 +2,6 @@ package org.ikmich.sqlitefoo.ui;
 
 import org.ikmich.sqlitefoo.data.Comment;
 
-import java.util.List;
-
 /**
  *
  */
@@ -14,18 +12,15 @@ public class CommentsPresenterImpl implements CommentsContract.Presenter {
 
     public CommentsPresenterImpl(CommentsContract.View commentsView) {
         this.commentsView = commentsView;
+
         commentsModel = new CommentsModelImpl(this);
 
-        List<Comment> comments = commentsModel.getAllComments();
-        if (comments != null && !comments.isEmpty()) {
-            commentsView.populateList(commentsModel.getAllComments());
-        }
+        commentsView.populateList(commentsModel.getAllComments());
     }
 
     @Override
     public void handleUpdateAction(long id, String newComment) {
         commentsModel.updateComment(id, newComment);
-        commentsView.populateList(commentsModel.getAllComments());
     }
 
     @Override
@@ -46,6 +41,11 @@ public class CommentsPresenterImpl implements CommentsContract.Presenter {
     @Override
     public void onCommentAdded(Comment comment) {
         commentsView.addComment(comment);
+    }
+
+    @Override
+    public void onCommentUpdated() {
+        commentsView.populateList(commentsModel.getAllComments());
     }
 
     @Override

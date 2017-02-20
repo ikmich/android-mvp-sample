@@ -8,9 +8,9 @@ import android.util.Log;
 /**
  *
  */
-public class AppSqliteHelper extends SQLiteOpenHelper implements CommentsTable {
+public class DbHelper extends SQLiteOpenHelper implements CommentsTable {
 
-    private static final String TAG = ">>> " + AppSqliteHelper.class.getName();
+    private static final String TAG = ">>> " + DbHelper.class.getName();
 
     private static final String DATABASE_NAME = "commments.db";
     private static final int DATABASE_VERSION = 1;
@@ -21,7 +21,7 @@ public class AppSqliteHelper extends SQLiteOpenHelper implements CommentsTable {
             + " integer primary key autoincrement, " + COLUMN_COMMENT
             + " text not null);";
 
-    public AppSqliteHelper(Context context) {
+    public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

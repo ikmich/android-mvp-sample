@@ -3,7 +3,6 @@ package org.ikmich.sqlitefoo.data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
@@ -12,24 +11,10 @@ import java.util.List;
 /**
  * DAO (Data Access Object) for the Comments.
  */
-public class CommentsDataSource implements CommentsTable {
-
-    private SQLiteDatabase database;
-    private AppSqliteHelper dbHelper;
-    private String[] allColumns = {COLUMN_ID,
-            COLUMN_COMMENT};
+public class CommentsDataSource extends AbsCommentsDataSource {
 
     public CommentsDataSource(Context context) {
-        dbHelper = new AppSqliteHelper(context);
-        // TODO - Should 'open()' be called here??
-    }
-
-    public void open() throws SQLException {
-        database = dbHelper.getWritableDatabase();
-    }
-
-    public void close() {
-        dbHelper.close();
+        super(context);
     }
 
     /**
@@ -38,6 +23,7 @@ public class CommentsDataSource implements CommentsTable {
      * @param comment The Comment to be saved.
      * @return The saved Comment.
      */
+    @Override
     public Comment createComment(String comment) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_COMMENT, comment);
@@ -61,6 +47,7 @@ public class CommentsDataSource implements CommentsTable {
         return newComment;
     }
 
+    @Override
     public void deleteComment(Comment comment) {
         long id = comment.getId();
         System.out.println("Comment deleted with id: " + id);
@@ -97,13 +84,16 @@ public class CommentsDataSource implements CommentsTable {
                 allColumns, null, null, null, null, null);
 
         cursor.moveToFirst();
+
         while (!cursor.isAfterLast()) {
             Comment comment = Comment.fromCursor(cursor);
             comments.add(comment);
             cursor.moveToNext();
         }
+
         // make sure to close the cursor
         cursor.close();
+
         return comments;
     }
 

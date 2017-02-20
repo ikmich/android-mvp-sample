@@ -10,8 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <provider
-            android:name=".data.AppDataProvider"
-            android:authorities="org.ikmich.sqlitefoo.data"
+            android:name=".provider.CommentsProvider"
+            android:authorities="org.ikmich.sqlitefoo.provider.CommentsProvider"
             android:exported="false"/>
 
         <activity android:name=".ui.CommentsActivity">
