@@ -4,7 +4,6 @@ import android.util.Log;
 
 import org.ikmich.sqlitefoo.App;
 import org.ikmich.sqlitefoo.data.Comment;
-import org.ikmich.sqlitefoo.data.CommentsDataSource;
 import org.ikmich.sqlitefoo.data.CommentsDataSource2;
 
 import java.util.List;
@@ -15,13 +14,13 @@ import java.util.Random;
  */
 public class CommentsModelImpl implements CommentsContract.Model {
 
-    private CommentsContract.Presenter presenter;
+    private InteractionListener interactionListener;
     private CommentsDataSource2 datasource;
 
     // TODO How to get activity context in MVP
 
-    public CommentsModelImpl(CommentsContract.Presenter presenter) {
-        this.presenter = presenter;
+    public CommentsModelImpl(CommentsContract.Model.InteractionListener interactionListener) {
+        this.interactionListener = interactionListener;
 
         datasource = new CommentsDataSource2(App.getContext());
         datasource.open();
@@ -35,13 +34,13 @@ public class CommentsModelImpl implements CommentsContract.Model {
 
         // save the new comment to the database
         Comment comment = datasource.createComment(comments[nextInt]);
-        presenter.onCommentAdded(comment);
+        interactionListener.onCommentAdded(comment);
     }
 
     @Override
     public void updateComment(long id, String comment) {
         datasource.updateComment(id, comment);
-        presenter.onCommentUpdated();
+        interactionListener.onCommentUpdated();
     }
 
     @Override
@@ -54,7 +53,7 @@ public class CommentsModelImpl implements CommentsContract.Model {
         // Check that there are items first.
         if (datasource.hasComments()) {
             datasource.deleteComment(comment);
-            presenter.onCommentDeleted(comment);
+            interactionListener.onCommentDeleted(comment);
         }
     }
 
