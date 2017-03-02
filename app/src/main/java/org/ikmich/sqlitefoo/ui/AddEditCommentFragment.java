@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 /**
  *
  */
-public class EditCommentFragment extends AppCompatDialogFragment {
+public class AddEditCommentFragment extends AppCompatDialogFragment {
 
     Comment comment;
     InteractionListener interactionListener;
@@ -28,7 +28,7 @@ public class EditCommentFragment extends AppCompatDialogFragment {
     public void show(FragmentManager fm, Comment comment, @NonNull InteractionListener listener) {
         this.comment = comment;
         this.interactionListener = listener;
-        show(fm, EditCommentFragment.class.getName());
+        show(fm, AddEditCommentFragment.class.getName());
     }
 
     @Override
@@ -37,7 +37,7 @@ public class EditCommentFragment extends AppCompatDialogFragment {
         builder.setTitle("Edit Comment");
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.edit_comment, null);
+        View view = inflater.inflate(R.layout.fragment_edit_comment, null);
 
         // ButterKnife binding initialization should be done before setView(view)
         ButterKnife.bind(view);

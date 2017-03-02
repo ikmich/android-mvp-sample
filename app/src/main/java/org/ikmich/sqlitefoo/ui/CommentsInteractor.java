@@ -1,25 +1,27 @@
 package org.ikmich.sqlitefoo.ui;
 
-import android.util.Log;
-
 import org.ikmich.sqlitefoo.App;
 import org.ikmich.sqlitefoo.data.Comment;
 import org.ikmich.sqlitefoo.data.CommentsDataSource2;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Random;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  *
  */
-public class CommentsModelImpl implements CommentsContract.Model {
+public class CommentsInteractor implements CommentsContract.Model {
 
     private InteractionListener interactionListener;
     private CommentsDataSource2 datasource;
 
     // TODO How to get activity context in MVP
 
-    public CommentsModelImpl(CommentsContract.Model.InteractionListener interactionListener) {
+    public CommentsInteractor(CommentsContract.Model.InteractionListener interactionListener) {
         this.interactionListener = interactionListener;
 
         datasource = new CommentsDataSource2(App.getContext());
@@ -27,14 +29,13 @@ public class CommentsModelImpl implements CommentsContract.Model {
     }
 
     @Override
-    public void addComment() {
-        String[] comments = new String[]{"Cool", "Very nice", "Hate it"};
-        int nextInt = new Random().nextInt(3);
-        Log.d(">>>", "Random int: " + nextInt);
-
+    public void addComment(String comment) {
+//        String[] comments = new String[]{"Cool", "Very nice", "Hate it"};
+//        int nextInt = new Random().nextInt(3);
+//        Log.d(">>>", "Random int: " + nextInt);
+//
         // save the new comment to the database
-        Comment comment = datasource.createComment(comments[nextInt]);
-        interactionListener.onCommentAdded(comment);
+        interactionListener.onCommentAdded(datasource.createComment(comment));
     }
 
     @Override
@@ -65,5 +66,26 @@ public class CommentsModelImpl implements CommentsContract.Model {
     @Override
     public void closeDatasource() {
         datasource.close();
+    }
+
+    @Override
+    public void fetchRemoteComments() {
+        final String url = "https://jsonplaceholder.typicode.com/comments?postId=2";
+
+        final OkHttpClient client = new OkHttpClient();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Request request = new Request.Builder().url(url).addHeader("Content-Type", "application/json").build();
+                    Response response = client.newCall(request).execute();
+                    interactionListener.onRemoteCommentsFetched(response.body().string());
+                } catch (IOException ex) {
+                }
+            }
+        }).start();
+
+
     }
 }
