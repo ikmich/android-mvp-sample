@@ -52,6 +52,15 @@ public class CommentsDataSource2 extends AbsCommentsDataSource {
     }
 
     @Override
+    public List<Comment> createComments(List<String> comments) {
+        List<Comment> cmts = new ArrayList<>();
+        for (String comment : comments) {
+            cmts.add(createComment(comment));
+        }
+        return cmts;
+    }
+
+    @Override
     public void deleteComment(Comment comment) {
         int numRows = context.getContentResolver().delete(
                 CommentsProvider.CONTENT_URI,

@@ -2,12 +2,16 @@ package org.ikmich.sqlitefoo.data;
 
 import android.database.Cursor;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  *
  */
 
 public class Comment {
     private long id;
+
+    @SerializedName("body")
     private String comment;
 
     public long getId() {

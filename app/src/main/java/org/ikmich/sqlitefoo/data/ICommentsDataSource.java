@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface ICommentsDataSource {
     Comment createComment(String comment);
+    List<Comment> createComments(List<String> comments);
     void deleteComment(Comment comment);
     void updateComment(long id, String newComment);
     boolean hasComments();

@@ -48,6 +48,11 @@ public class CommentsDataSource extends AbsCommentsDataSource {
     }
 
     @Override
+    public List<Comment> createComments(List<String> comments) {
+        return null;
+    }
+
+    @Override
     public void deleteComment(Comment comment) {
         long id = comment.getId();
         System.out.println("Comment deleted with id: " + id);

@@ -1,12 +1,10 @@
 package org.ikmich.sqlitefoo.ui;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.support.v7.app.AppCompatActivity;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import cog.android.Alerter;
+import cog.android.Toaster;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -15,7 +13,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
-    protected void toast(Object o) {
-        Toast.makeText(this, o.toString(), Toast.LENGTH_SHORT).show();
+    protected void toast(Object message) {
+        Toaster.toast(this, message.toString());
+    }
+
+    protected void alert(Object message) {
+        Alerter.alert(this, message);
     }
 }

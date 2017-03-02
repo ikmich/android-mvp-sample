@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import org.ikmich.sqlitefoo.R;
 import org.ikmich.sqlitefoo.data.Comment;
@@ -20,6 +21,9 @@ public class CommentsActivity extends BaseActivity implements CommentsContract.V
 
     @BindView(android.R.id.list)
     ListView list;
+
+    @BindView(R.id.progress_fetch_remote)
+    ProgressBar fetchProgress;
 
     private CommentsContract.Presenter presenter;
 
@@ -38,12 +42,12 @@ public class CommentsActivity extends BaseActivity implements CommentsContract.V
             public void onItemClick(final AdapterView<?> adapterView, View view, int i, long l) {
                 final Comment comment = (Comment) adapterView.getAdapter().getItem(i);
 
-                EditCommentFragment f = new EditCommentFragment();
+                AddEditCommentFragment f = new AddEditCommentFragment();
                 FragmentManager fm = getSupportFragmentManager();
-                f.show(fm, comment, new EditCommentFragment.InteractionListener() {
+                f.openEditDialog(fm, comment, new AddEditCommentFragment.UpdateActionListener() {
                     @Override
                     public void onUpdate(String newComment) {
-                        presenter.handleUpdateAction(comment.getId(), newComment);
+                        presenter.onClickUpdate(comment.getId(), newComment);
                     }
                 });
             }
@@ -52,7 +56,7 @@ public class CommentsActivity extends BaseActivity implements CommentsContract.V
 
     @Override
     public void populateList(List<Comment> comments) {
-        // use the SimpleCursorAdapter to show the
+        // use the SimpleCursorAdapter to openEditDialog the
         // elements in a ListView
         ArrayAdapter<Comment> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, comments);
@@ -68,11 +72,32 @@ public class CommentsActivity extends BaseActivity implements CommentsContract.V
     }
 
     @Override
-    public void addComment(Comment comment) {
-        @SuppressWarnings("unchecked")
-        ArrayAdapter<Comment> adapter = (ArrayAdapter<Comment>) getListAdapter();
-        adapter.add(comment);
-        adapter.notifyDataSetChanged();
+    public void addComment(final Comment comment) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                @SuppressWarnings("unchecked")
+                ArrayAdapter<Comment> adapter = (ArrayAdapter<Comment>) getListAdapter();
+                adapter.add(comment);
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    @Override
+    public void addComments(final List<Comment> comments) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                @SuppressWarnings("unchecked")
+                ArrayAdapter<Comment> adapter = (ArrayAdapter<Comment>) getListAdapter();
+                for (Comment comment : comments) {
+                    adapter.add(comment);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
     @Override
@@ -88,16 +113,29 @@ public class CommentsActivity extends BaseActivity implements CommentsContract.V
         Comment comment;
 
         switch (view.getId()) {
-            case R.id.add:
-                presenter.handleAddAction();
+            case R.id.btn_add:
+                AddEditCommentFragment f = new AddEditCommentFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                f.openAddDialog(fm, new AddEditCommentFragment.AddActionListener() {
+                    @Override
+                    public void onAdd(String newComment) {
+                        presenter.onClickAdd(newComment);
+                    }
+                });
+
                 break;
 
-            case R.id.delete:
+            case R.id.btn_delete_first:
                 // Check that there are items first.
                 if (getListAdapter().getCount() > 0) {
                     comment = (Comment) getListAdapter().getItem(0);
-                    presenter.handleDeleteAction(comment);
+                    presenter.onClickDeleteFirst(comment);
                 }
+
+                break;
+
+            case R.id.btn_fetch_remote:
+                presenter.onClickFetchRemote();
                 break;
         }
     }
@@ -112,5 +150,35 @@ public class CommentsActivity extends BaseActivity implements CommentsContract.V
     protected void onPause() {
         presenter.onPause();
         super.onPause();
+    }
+
+    @Override
+    public void toast(String message) {
+        super.toast(message);
+    }
+
+    @Override
+    public void alert(String message) {
+        super.alert(message);
+    }
+
+    @Override
+    public void showFetchProgress() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                fetchProgress.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    @Override
+    public void hideFetchProgress() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                fetchProgress.setVisibility(View.GONE);
+            }
+        });
     }
 }

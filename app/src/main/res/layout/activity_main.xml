@@ -7,28 +7,58 @@
     <LinearLayout
         android:id="@+id/group"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
 
         <Button
-            android:id="@+id/add"
+            android:id="@+id/btn_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onClick"
-            android:text="Add New"/>
+            android:text="@string/add_new_comment"/>
 
         <Button
-            android:id="@+id/delete"
+            android:id="@+id/btn_delete_first"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onClick"
-            android:text="Delete First"/>
-
+            android:text="@string/delete_first"/>
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_vertical">
+            <Button
+                android:id="@+id/btn_fetch_remote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:onClick="onClick"
+                android:text="Fetch Remote Comments"/>
+            <ProgressBar
+                android:id="@+id/progress_fetch_remote"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/btn_fetch_remote"
+                android:indeterminate="true"
+                android:indeterminateBehavior="cycle"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:divider="#c9c9c9"
+        android:dividerHeight="0.5dp"/>
 
 </LinearLayout>
 

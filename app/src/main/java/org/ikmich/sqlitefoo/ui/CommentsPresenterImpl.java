@@ -2,6 +2,8 @@ package org.ikmich.sqlitefoo.ui;
 
 import org.ikmich.sqlitefoo.data.Comment;
 
+import java.util.List;
+
 /**
  *
  */
@@ -10,26 +12,26 @@ public class CommentsPresenterImpl implements CommentsContract.Presenter {
     private CommentsContract.View commentsView;
     private CommentsContract.Model commentsModel;
 
-    public CommentsPresenterImpl(CommentsContract.View commentsView) {
+    CommentsPresenterImpl(CommentsContract.View commentsView) {
         this.commentsView = commentsView;
 
-        commentsModel = new CommentsModelImpl(this);
+        commentsModel = new CommentsInteractor(this);
 
         commentsView.populateList(commentsModel.getAllComments());
     }
 
     @Override
-    public void handleUpdateAction(long id, String newComment) {
+    public void onClickUpdate(long id, String newComment) {
         commentsModel.updateComment(id, newComment);
     }
 
     @Override
-    public void handleAddAction() {
-        commentsModel.addComment();
+    public void onClickAdd(String comment) {
+        commentsModel.addComment(comment);
     }
 
     @Override
-    public void handleDeleteAction(Comment comment) {
+    public void onClickDeleteFirst(Comment comment) {
         commentsModel.deleteComment(comment);
     }
 
@@ -44,8 +46,26 @@ public class CommentsPresenterImpl implements CommentsContract.Presenter {
     }
 
     @Override
+    public void onBulkCommentsAdded(List<Comment> comments) {
+        commentsView.toast("Bulk comments added!");
+        commentsView.addComments(comments);
+    }
+
+    @Override
     public void onCommentUpdated() {
         commentsView.populateList(commentsModel.getAllComments());
+    }
+
+    @Override
+    public void onClickFetchRemote() {
+        commentsView.showFetchProgress();
+        commentsModel.fetchRemoteComments();
+    }
+
+    @Override
+    public void onRemoteCommentsFetched(List<String> commentList) {
+        commentsView.hideFetchProgress();
+        commentsModel.addBulkComments(commentList);
     }
 
     @Override

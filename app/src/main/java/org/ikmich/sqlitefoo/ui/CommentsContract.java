@@ -14,7 +14,17 @@ public class CommentsContract {
 
         void addComment(Comment comment);
 
+        void addComments(List<Comment> comments);
+
         void removeComment(Comment comment);
+
+        void toast(String message);
+
+        void alert(String message);
+
+        void showFetchProgress();
+
+        void hideFetchProgress();
     }
 
     interface Presenter extends Model.InteractionListener {
@@ -22,11 +32,13 @@ public class CommentsContract {
 
         void onPause();
 
-        void handleUpdateAction(long id, String comment);
+        void onClickUpdate(long id, String comment);
 
-        void handleAddAction();
+        void onClickAdd(String comment);
 
-        void handleDeleteAction(Comment comment);
+        void onClickDeleteFirst(Comment comment);
+
+        void onClickFetchRemote();
     }
 
     interface Model {
@@ -34,7 +46,9 @@ public class CommentsContract {
 
         void closeDatasource();
 
-        void addComment();
+        void addComment(String comment);
+
+        void addBulkComments(List<String> comments);
 
         void updateComment(long id, String comment);
 
@@ -42,12 +56,18 @@ public class CommentsContract {
 
         List<Comment> getAllComments();
 
+        void fetchRemoteComments();
+
         interface InteractionListener {
             void onCommentDeleted(Comment comment);
 
             void onCommentAdded(Comment comment);
 
+            void onBulkCommentsAdded(List<Comment> comments);
+
             void onCommentUpdated();
+
+            void onRemoteCommentsFetched(List<String> commentList);
         }
     }
 }

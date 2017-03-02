@@ -1,10 +1,17 @@
 package org.ikmich.sqlitefoo.ui;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+
 import org.ikmich.sqlitefoo.App;
 import org.ikmich.sqlitefoo.data.Comment;
 import org.ikmich.sqlitefoo.data.CommentsDataSource2;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -35,7 +42,14 @@ public class CommentsInteractor implements CommentsContract.Model {
 //        Log.d(">>>", "Random int: " + nextInt);
 //
         // save the new comment to the database
-        interactionListener.onCommentAdded(datasource.createComment(comment));
+        Comment cmt = datasource.createComment(comment);
+        interactionListener.onCommentAdded(cmt);
+    }
+
+    @Override
+    public void addBulkComments(List<String> comments) {
+        List<Comment> cmts = datasource.createComments(comments);
+        interactionListener.onBulkCommentsAdded(cmts);
     }
 
     @Override
@@ -80,12 +94,24 @@ public class CommentsInteractor implements CommentsContract.Model {
                 try {
                     Request request = new Request.Builder().url(url).addHeader("Content-Type", "application/json").build();
                     Response response = client.newCall(request).execute();
-                    interactionListener.onRemoteCommentsFetched(response.body().string());
+                    String responseJson = response.body().string();
+
+                    // Gson-serialize to Comment object.
+                    Gson gson = new Gson();
+                    JsonArray responseComments = gson.fromJson(responseJson, JsonArray.class);
+                    List<String> comments = new ArrayList<>();
+
+                    for (int i = 0; i < responseComments.size(); i++) {
+                        JsonElement jsonElement = responseComments.get(i);
+                        String body = jsonElement.getAsJsonObject().get("body").getAsString();
+                        comments.add(body);
+                    }
+
+                    interactionListener.onRemoteCommentsFetched(comments);
                 } catch (IOException ex) {
+                    Log.e("CommentsInteractor", ">>> Request error", ex);
                 }
             }
         }).start();
-
-
     }
 }

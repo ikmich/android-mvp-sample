@@ -8,10 +8,11 @@
         android:id="@+id/input_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="textCapSentences"
         android:maxLines="1"/>
     <Button
-        android:id="@+id/btn_update"
+        android:id="@+id/btn_action"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Update"/>
+        android:text="@string/update"/>
 </LinearLayout>

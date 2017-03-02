@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 /**
- *
+ * SQLite database helper class.
  */
 public class DbHelper extends SQLiteOpenHelper implements CommentsTable {
 
