@@ -18,9 +18,6 @@ import org.ikmich.sqlitefoo.data.DbHelper;
 
 import java.util.HashMap;
 
-/**
- *
- */
 public class CommentsProvider extends ContentProvider implements CommentsTable {
 
     DbHelper dbHelper;

@@ -73,6 +73,12 @@ public class CommentsInteractor implements CommentsContract.Model {
     }
 
     @Override
+    public void deleteAllComments() {
+        datasource.deleteAll();
+        interactionListener.onAllCommentsDeleted();
+    }
+
+    @Override
     public void openDatasource() {
         datasource.open();
     }

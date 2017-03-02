@@ -23,6 +23,13 @@
             android:layout_height="wrap_content"
             android:onClick="onClick"
             android:text="@string/delete_first"/>
+
+        <Button
+            android:id="@+id/btn_delete_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:text="@string/delete_all"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -39,13 +46,13 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:onClick="onClick"
-                android:text="Fetch Remote Comments"/>
+                android:text="@string/fetch_remote_comments"/>
             <ProgressBar
                 android:id="@+id/progress_fetch_remote"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/btn_fetch_remote"
+                android:layout_toEndOf="@+id/btn_fetch_remote"
                 android:indeterminate="true"
                 android:indeterminateBehavior="cycle"
                 android:visibility="gone"/>

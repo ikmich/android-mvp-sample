@@ -1,7 +1,7 @@
 package org.ikmich.sqlitefoo.ui;
 
 public enum ActionType {
-    ADD("add"), EDIT("edit");
+    ADD("add"), EDIT("edit"), DELETE("delete");
 
     private String value;
 

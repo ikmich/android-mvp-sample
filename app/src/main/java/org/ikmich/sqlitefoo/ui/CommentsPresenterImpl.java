@@ -2,6 +2,7 @@ package org.ikmich.sqlitefoo.ui;
 
 import org.ikmich.sqlitefoo.data.Comment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,6 +67,17 @@ public class CommentsPresenterImpl implements CommentsContract.Presenter {
     public void onRemoteCommentsFetched(List<String> commentList) {
         commentsView.hideFetchProgress();
         commentsModel.addBulkComments(commentList);
+    }
+
+    @Override
+    public void onClickDeleteAll() {
+        commentsView.toast("All comments deleted.");
+        commentsModel.deleteAllComments();
+    }
+
+    @Override
+    public void onAllCommentsDeleted() {
+        commentsView.populateList(new ArrayList<Comment>());
     }
 
     @Override

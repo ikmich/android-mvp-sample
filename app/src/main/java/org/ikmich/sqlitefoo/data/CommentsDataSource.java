@@ -60,6 +60,11 @@ public class CommentsDataSource extends AbsCommentsDataSource {
                 + " = " + id, null);
     }
 
+    @Override
+    public void deleteAll() {
+
+    }
+
     /**
      * Update a Comment.
      *

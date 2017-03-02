@@ -38,6 +38,8 @@ public class CommentsContract {
 
         void onClickDeleteFirst(Comment comment);
 
+        void onClickDeleteAll();
+
         void onClickFetchRemote();
     }
 
@@ -54,12 +56,16 @@ public class CommentsContract {
 
         void deleteComment(Comment comment);
 
+        void deleteAllComments();
+
         List<Comment> getAllComments();
 
         void fetchRemoteComments();
 
         interface InteractionListener {
             void onCommentDeleted(Comment comment);
+
+            void onAllCommentsDeleted();
 
             void onCommentAdded(Comment comment);
 

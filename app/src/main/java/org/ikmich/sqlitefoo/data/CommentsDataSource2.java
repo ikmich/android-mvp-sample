@@ -70,6 +70,12 @@ public class CommentsDataSource2 extends AbsCommentsDataSource {
     }
 
     @Override
+    public void deleteAll() {
+        int numRows = context.getContentResolver().delete(CommentsProvider.CONTENT_URI, "", null);
+        Log.d(TAG, numRows + " deleted.");
+    }
+
+    @Override
     public void updateComment(long id, String newComment) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_COMMENT, newComment);

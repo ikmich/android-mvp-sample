@@ -134,6 +134,12 @@ public class CommentsActivity extends BaseActivity implements CommentsContract.V
 
                 break;
 
+            case R.id.btn_delete_all:
+                if (getListAdapter().getCount() > 0) {
+                    presenter.onClickDeleteAll();
+                }
+                break;
+
             case R.id.btn_fetch_remote:
                 presenter.onClickFetchRemote();
                 break;
