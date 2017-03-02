@@ -37,12 +37,15 @@ public class CommentsInteractor implements CommentsContract.Model {
 
     @Override
     public void addComment(String comment) {
-//        String[] comments = new String[]{"Cool", "Very nice", "Hate it"};
-//        int nextInt = new Random().nextInt(3);
-//        Log.d(">>>", "Random int: " + nextInt);
-//
         // save the new comment to the database
         Comment cmt = datasource.createComment(comment);
+
+        /*
+         Having 'interactionListener.onCommentAdded(comment)' here may not be exactly necessary, since the
+         'datasource.createComment(comment)' returns immediately, and the result can simply be returned to the
+         calling class. The interaction listener methods are best suited for
+         data requests that are asynchronous and return at a later time.
+         */
         interactionListener.onCommentAdded(cmt);
     }
 
@@ -98,11 +101,11 @@ public class CommentsInteractor implements CommentsContract.Model {
             @Override
             public void run() {
                 try {
-                    Request request = new Request.Builder().url(url).addHeader("Content-Type", "application/json").build();
+                    Request request = new Request.Builder().url(url)
+                            .addHeader("Content-Type", "application/json").build();
                     Response response = client.newCall(request).execute();
                     String responseJson = response.body().string();
 
-                    // Gson-serialize to Comment object.
                     Gson gson = new Gson();
                     JsonArray responseComments = gson.fromJson(responseJson, JsonArray.class);
                     List<String> comments = new ArrayList<>();
