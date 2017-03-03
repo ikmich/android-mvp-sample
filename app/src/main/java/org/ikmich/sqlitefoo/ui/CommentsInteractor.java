@@ -21,14 +21,12 @@ import okhttp3.Response;
 /**
  *
  */
-public class CommentsInteractor implements CommentsContract.Model {
+class CommentsInteractor implements CommentsContract.Model {
 
     private InteractionListener interactionListener;
     private CommentsDataSource2 datasource;
 
-    // TODO How to get activity context in MVP
-
-    public CommentsInteractor(CommentsContract.Model.InteractionListener interactionListener) {
+    CommentsInteractor(CommentsContract.Model.InteractionListener interactionListener) {
         this.interactionListener = interactionListener;
 
         datasource = new CommentsDataSource2(App.getContext());
@@ -91,6 +89,10 @@ public class CommentsInteractor implements CommentsContract.Model {
         datasource.close();
     }
 
+    /**
+     * Fetches comments from a http api. The InteractionListener instance will be called upon when the response has
+     * returned.
+     */
     @Override
     public void fetchRemoteComments() {
         final String url = "https://jsonplaceholder.typicode.com/comments?postId=2";
